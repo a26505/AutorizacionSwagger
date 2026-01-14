@@ -6,6 +6,25 @@ WHERE name = 'RestauranteDB';
 
 USE RestauranteDB;
 
+-- ===========================
+-- TABLA USUARIO
+-- ===========================
+CREATE TABLE Usuario (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Nombre NVARCHAR(100) NOT NULL,
+    Email NVARCHAR(100) UNIQUE NOT NULL,
+    Password NVARCHAR(100) NOT NULL,
+    Rol NVARCHAR(20) NOT NULL
+);
+
+-- Usuario administrador inicial
+INSERT INTO Usuario (Nombre, Email, Password, Rol)
+VALUES ('Admin', 'admin@mail.com', '1234', 'Admin');
+
+-- ===========================
+-- TABLAS DEL RESTAURANTE
+-- ===========================
+
 CREATE TABLE PlatoPrincipal (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     Nombre NVARCHAR(100) NOT NULL,
@@ -32,8 +51,16 @@ CREATE TABLE Combo (
     PlatoPrincipal INT NOT NULL,
     Bebida INT NOT NULL,
     Postre INT NOT NULL,
-    Descuento DECIMAL(10, 2) NOT NULL CHECK (Descuento >= 0)
+    Descuento DECIMAL(10, 2) NOT NULL CHECK (Descuento >= 0),
+
+    FOREIGN KEY (PlatoPrincipal) REFERENCES PlatoPrincipal(Id),
+    FOREIGN KEY (Bebida) REFERENCES Bebida(Id),
+    FOREIGN KEY (Postre) REFERENCES Postre(Id)
 );
+
+-- ===========================
+-- DATOS INICIALES
+-- ===========================
 
 INSERT INTO PlatoPrincipal (Nombre, Precio, Ingredientes)
 VALUES 
@@ -54,6 +81,10 @@ INSERT INTO Combo (PlatoPrincipal, Bebida, Postre, Descuento)
 VALUES 
 (1, 1, 2, 0.20);
 
+-- ===========================
+-- CONSULTAS DE PRUEBA
+-- ===========================
+
 SELECT * FROM PlatoPrincipal;
 
 SELECT * 
@@ -64,6 +95,5 @@ SELECT *
 FROM PlatoPrincipal
 ORDER BY Precio ASC;
 
-SELECT DISTINCT Nombre, Precio FROM PlatoPrincipal;
-
-
+SELECT DISTINCT Nombre, Precio 
+FROM PlatoPrincipal;
